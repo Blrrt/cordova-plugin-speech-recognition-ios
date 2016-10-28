@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-speech-recognition-ios" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+  <name>SpeechRecognitionIos</name>
+  <js-module name="SpeechRecognitionIos" src="lib/www/index.js">
+    <clobbers target="cordova.plugins.SpeechRecognitionIos" />
+  </js-module>
+  <platform name="ios">
+    <config-file target="config.xml" parent="/*">
+      <feature name="SpeechRecognitionIos">
+        <param name="ios-package" value="SpeechRecognitionIos" />
+      </feature>
+    </config-file>
+    <config-file target="*-Info.plist" parent="NSMicrophoneUsageDescription">
+      <string>$MICROPHONE_USAGE_DESCRIPTION</string>
+    </config-file>
+    <config-file target="*-Info.plist" parent="NSSpeechRecognitionUsageDescription">
+      <string>$SPEECH_RECOGNITION_USAGE_DESCRIPTION</string>
+    </config-file>
+    <header-file src="lib/ios/index.h" />
+    <source-file src="lib/ios/index.m" />
+  </platform>
+</plugin>

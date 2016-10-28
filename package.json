@@ -1,0 +1,41 @@
+{
+  "author": "Dennis Torres <djtorres0@gmail.com>",
+  "cordova": {
+    "id": "cordova-plugin-speech-recognition-ios",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "description": "Cordova plugin exposing the iOS Speech Recognition API",
+  "devDependencies": {
+    "babel-plugin-external-helpers": "6.18.0",
+    "babel-preset-es2015": "6.18.0",
+    "babel-preset-stage-2": "6.18.0",
+    "cordova-plugin-add-swift-support": "1.6.0",
+    "cordova-test": "0.1.6",
+    "eslint": "3.8.1",
+    "eslint-config-airbnb-base": "9.0.0",
+    "eslint-plugin-import": "2.0.1",
+    "rollup": "0.36.3",
+    "rollup-plugin-babel": "2.6.1",
+    "tape": "4.6.2"
+  },
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "ios",
+    "recognition",
+    "speech"
+  ],
+  "license": "Unlicense",
+  "name": "@blrrt/cordova-plugin-speech-recognition-ios",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blrrt/cordova-plugin-speech-recognition-ios.git"
+  },
+  "scripts": {
+    "build": "rollup -c -i src/www/index.js -o lib/www/index.js",
+    "prepublish": "npm run build"
+  },
+  "version": "1.0.0"
+}
