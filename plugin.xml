@@ -16,6 +16,7 @@
     <config-file target="*-Info.plist" parent="NSSpeechRecognitionUsageDescription">
       <string>$SPEECH_RECOGNITION_USAGE_DESCRIPTION</string>
     </config-file>
+    <framework src="Speech.framework" weak="true" />
     <header-file src="lib/ios/index.h" />
     <source-file src="lib/ios/index.m" />
   </platform>
