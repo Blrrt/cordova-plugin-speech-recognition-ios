@@ -35,5 +35,5 @@
     "build": "rollup -c -i src/www/index.js -o lib/www/index.js",
     "prepublish": "npm run build"
   },
-  "version": "1.0.1"
+  "version": "1.0.2"
 }
