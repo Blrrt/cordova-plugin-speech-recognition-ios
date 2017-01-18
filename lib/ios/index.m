@@ -34,6 +34,40 @@
   self.speechTaskRefs = [[NSMutableDictionary alloc] init];
 }
 
+-(AVAudioSessionDataSourceDescription *)getAudioSessionDataSourceFrom:(NSArray<AVAudioSessionDataSourceDescription *> *)sources withOrientation:(NSString *)orientation {
+  for (AVAudioSessionDataSourceDescription *source in sources) {
+    if ([source.orientation isEqual:orientation]) {
+      return source;
+    }
+  }
+
+  return nil;
+}
+
+- (AVAudioSessionPortDescription *)getAudioSessionInputBuiltinFrom:(NSArray *)inputs {
+  for (AVAudioSessionPortDescription *port in inputs) {
+    if ([port.portType isEqualToString:AVAudioSessionPortBuiltInMic]) {
+      return port;
+    }
+  }
+
+  return nil;
+}
+
+- (NSString *const)getAudioSessionOrientationByString:(NSString *)orientation {
+  if ([orientation isEqualToString:@"back"]) {
+    return AVAudioSessionOrientationBack;
+  } else if ([orientation isEqualToString:@"bottom"]) {
+    return AVAudioSessionOrientationBottom;
+  } else if ([orientation isEqualToString:@"front"]) {
+    return AVAudioSessionOrientationFront;
+  } else if ([orientation isEqualToString:@"top"]) {
+    return AVAudioSessionOrientationTop;
+  } else {
+    return nil;
+  }
+}
+
 - (int)getStatusCode:(SFSpeechRecognizerAuthorizationStatus)status {
   switch (status) {
     case SFSpeechRecognizerAuthorizationStatusAuthorized:
@@ -79,18 +113,28 @@
 
 - (void)start:(CDVInvokedUrlCommand *)command {
   @try {
+    NSError *error = nil;
     NSString *id = [command.arguments objectAtIndex:0];
     NSMutableDictionary *options = [command.arguments objectAtIndex:1];
     NSMutableDictionary *optionsInit = [options objectForKey:@"init"];
     NSMutableDictionary *optionsRecognitionRequest = [options objectForKey:@"speechRecognitionRequest"];
     NSString *localeId = [optionsInit objectForKey:@"locale"];
+    NSString *orientation = [optionsInit objectForKey:@"orientation"];
     AVAudioEngine *audioEngine;
     AVAudioFormat *audioFormat;
     AVAudioInputNode *audioInputNode;
     AVAudioSession *audioSession;
+    AVAudioSessionDataSourceDescription *audioSessionDataSource;
+    NSArray *audioSessionInputsAvailable;
+    AVAudioSessionPortDescription *audioSessionInput;
+    NSString *audioSessionOrientation;
     SFSpeechRecognizer *speechRecognizer;
     SFSpeechAudioBufferRecognitionRequest *speechRequest;
     SFSpeechRecognitionTask *speechTask;
+
+    if (orientation == nil) {
+      orientation = @"front";
+    }
 
     if (localeId == nil) {
       speechRecognizer = [[SFSpeechRecognizer alloc] init];
@@ -105,9 +149,15 @@
     [self.audioEngineRefs setObject:audioEngine forKey:id];
 
     audioSession = [AVAudioSession sharedInstance];
+    audioSessionOrientation = [self getAudioSessionOrientationByString:orientation];
+    audioSessionInputsAvailable = [audioSession availableInputs];
+    audioSessionInput = [self getAudioSessionInputBuiltinFrom:audioSessionInputsAvailable];
+    audioSessionDataSource = [self getAudioSessionDataSourceFrom:audioSessionInput.dataSources withOrientation:orientation];
     [audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
     [audioSession setMode:AVAudioSessionModeMeasurement error:nil];
     [audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+    [audioSessionInput setPreferredDataSource:audioSessionDataSource error:&error];
+    [audioSession setPreferredInput:audioSessionInput error:&error];
 
     speechRequest = [[SFSpeechAudioBufferRecognitionRequest alloc] init];
     speechRequest.contextualStrings = [optionsRecognitionRequest objectForKey:@"contextualStrings"];

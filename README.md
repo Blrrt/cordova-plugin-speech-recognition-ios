@@ -24,3 +24,19 @@ Cordova plugin exposing the iOS Speech Recognition API
         ));
       }
     });
+
+## options
+
+Initialization options:
+
+* **init.localeId** - The locale for the speech
+* **init.orientation** - The microphone to use: `back`, `bottom`, `front`, `top`
+
+Speech Recognition options:
+
+* **speechRecognition.contextualStrings**
+* **speechRecognition.interactionIdentifier**
+* **speechRecognition.shouldReportPartialResultss**
+* **speechRecognition.taskHint**
+
+Refer to [the docs](https://developer.apple.com/reference/speech/sfspeechrecognitionrequest) for more information.
